@@ -30,7 +30,6 @@ def load_config(config_path):
 def parse_args():
     parser = argparse.ArgumentParser(description='PyTorch Lightning Training')
     parser.add_argument("--dataset", type=str, default="rsna", help="Dataset to use: rsna")
-    parser.add_argument('--gpus', type=int, default=1, help='Number of GPUs to use (default: 1)')
     parser.add_argument('--config', type=str, default='../configs/rsna.yaml', help='Path to config file')
     parser.add_argument("--batch_size", type=int, default=32, help="Batch size")
     parser.add_argument("--num_workers", type=int, default=16, help="Number of workers for dataloader")
@@ -128,7 +127,6 @@ if __name__ == '__main__':
 
     trainer = Trainer(
         max_epochs=args.max_epochs,
-        gpus=args.gpus,
         callbacks=callbacks,
         logger=pl.loggers.WandbLogger( project='FinetuneDet', name=f"{args.dataset}_{args.data_pct}_{extension}"),
         strategy='ddp', #ddp, ddp_spawn
@@ -139,7 +137,8 @@ if __name__ == '__main__':
     
     # train
     # import pdb; pdb.set_trace()
-    trainer.fit(model, datamodule)
+    # trainer.fit(model, datamodule)
+    # trainer.validate_loop._results.clear()
     # test
-    trainer.test(model, datamodule, ckpt_path="best")
+    trainer.test(model, datamodule, ckpt_path="../annotations/checkpoint/resnet_50.ckpt")
 

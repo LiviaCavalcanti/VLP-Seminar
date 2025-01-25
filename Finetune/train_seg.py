@@ -14,7 +14,7 @@ import datetime
 import argparse
 from pytorch_lightning import LightningModule, seed_everything
 from datasets.seg_dataset import RSNASegmentDataset
-from methods.backbones.transformer_seg import SETRModel
+# from methods.backbones.transformer_seg import SETRModel
 from methods.backbones.encoder import ImageEncoder
 from datasets.data_module import DataModule
 from datasets.transforms import DataTransforms

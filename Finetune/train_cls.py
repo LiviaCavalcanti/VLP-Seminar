@@ -3,7 +3,6 @@ from pytorch_lightning import Trainer
 from pytorch_lightning import Trainer, seed_everything
 from pytorch_lightning.callbacks import (EarlyStopping, LearningRateMonitor,
                                          ModelCheckpoint)
-from pytorch_lightning.loggers import WandbLogger
 from methods.cls_model import FinetuneClassifier
 import torch
 import yaml
@@ -29,7 +28,7 @@ def load_config(config_path):
 def parse_args():
     parser = argparse.ArgumentParser(description='PyTorch Lightning Training')
     parser.add_argument("--dataset", type=str, default="chexpert", help="Dataset to use: chexpert, rsna")
-    parser.add_argument('--gpus', type=int, default=1, help='Number of GPUs to use (default: 1)')
+    parser.add_argument('--devices', type=int, default=1, help='Number of GPUs to use (default: 1)')
     parser.add_argument('--config', type=str, default='../configs/chexpert.yaml', help='Path to config file:chexkpert.yaml, rsna.yaml')
     parser.add_argument("--batch_size", type=int, default=48, help="Batch size")
     parser.add_argument("--num_workers", type=int, default=16, help="Number of workers for dataloader")
@@ -94,9 +93,8 @@ if __name__ == '__main__':
 
     trainer = Trainer(
         max_epochs=args.max_epochs,
-        gpus=args.gpus,
+        devices=args.devices,
         callbacks=callbacks,
-        logger=pl.loggers.WandbLogger( project='FinetuneCLS', name=f"{args.dataset}_{args.data_pct}_{extension}",dir=logger_dir),
         strategy='ddp', #ddp, ddp_spawn
         )
 
@@ -105,7 +103,7 @@ if __name__ == '__main__':
     
     # train
     # import pdb; pdb.set_trace()
-    trainer.fit(model, datamodule)
+    # trainer.fit(model, datamodule)
     # test
-    trainer.test(model, datamodule, ckpt_path="best")
+    trainer.test(model, datamodule, ckpt_path="../data/ckpts/FinetuneCLS/chexpert/2025_01_06_22_28_21/last.ckpt")
 
